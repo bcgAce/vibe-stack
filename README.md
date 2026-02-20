@@ -1,0 +1,161 @@
+# vibe-stack
+
+A batteries-included Next.js starter for building cool stuff fast. AI, database, auth — all optional, all pre-wired. Just start building.
+
+## Get Started
+
+```bash
+git clone https://github.com/bcgace/vibe-stack.git my-project
+cd my-project
+npm install
+npm run dev
+```
+
+Open http://localhost:3000 — you're up and running.
+
+## What's Included
+
+- **Next.js 15** with App Router and TypeScript
+- **Tailwind CSS** + **shadcn/ui** components
+- **Dark mode** via next-themes
+- **Vercel AI SDK** with OpenAI + Anthropic support
+- **Neon Postgres** + **Drizzle ORM** (optional)
+- **Clerk auth** (optional)
+- **Vercel** + **Railway** deployment support
+- **Claude Code** slash commands for setup, dev, build, lint, test, db
+- **Playwright** for E2E testing
+
+## What Are You Building?
+
+### Web App
+You're in the right place. This repo, deploy to Vercel or Railway.
+
+### Mobile App
+If you need native device features (camera, push notifications, app store presence), check out [Expo](https://expo.dev/) with React Native. Your Next.js API routes can still serve as the backend.
+
+### PWA (Progressive Web App)
+If you want a web app that feels native on mobile (installable, offline support) but don't need native APIs — this repo works great. Add a `manifest.json` and a service worker. Good for content-focused apps where one codebase for web + mobile is ideal.
+
+### When to go native vs PWA?
+- **PWA**: Content-focused, no native APIs needed, want one codebase
+- **Native (Expo)**: Need camera, push notifications, app store presence, offline-first
+- **Both**: Start with PWA, go native when you actually need native features
+
+## Optional Features
+
+### AI — OpenAI + Anthropic
+
+```bash
+# Add to .env.development.local
+OPENAI_API_KEY=sk-your-key
+# and/or
+ANTHROPIC_API_KEY=sk-ant-your-key
+```
+
+**Getting API keys:**
+- **OpenAI**: Go to [platform.openai.com](https://platform.openai.com/) → API Keys → Create new key
+- **Anthropic**: Go to [console.anthropic.com](https://console.anthropic.com/) → API Keys → Create key
+
+Then use the helpers in `src/lib/ai.ts`:
+```typescript
+import { generateWithAI, generateTypedObject } from '@/lib/ai';
+
+// Simple text generation
+const text = await generateWithAI('Write a haiku about shipping fast');
+
+// Type-safe structured output with Zod
+const result = await generateTypedObject(mySchema, 'Analyze this data...');
+
+// Use Anthropic instead of OpenAI
+const text = await generateWithAI('Hello', undefined, 'anthropic');
+```
+
+### Database — Neon Postgres
+
+```bash
+# Add to .env.development.local
+DATABASE_URL=postgresql://user:pass@host/db
+```
+
+1. Sign up at [neon.tech](https://neon.tech/) (free tier available)
+2. Create a project and copy the connection string
+3. Define schemas in `src/db/schema/`
+4. Run `npm run db:push` to sync
+
+### Auth — Clerk
+
+```bash
+# Add to .env.development.local
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+```
+
+1. Sign up at [clerk.com](https://clerk.com/) (free tier available)
+2. Create an application and copy the keys
+3. That's it — auth middleware activates automatically
+
+## Where Should I Deploy?
+
+### Vercel (recommended for most projects)
+Best for: Landing pages, marketing sites, SPAs, apps with serverless API routes.
+
+```bash
+npm i -g vercel && vercel login && vercel --prod
+```
+
+Vercel is optimized for Next.js. Zero config, automatic previews on PRs, great defaults.
+
+### Railway (best for backend-heavy apps)
+Best for: Apps with background jobs, WebSocket servers, cron tasks, persistent processes.
+
+```bash
+npm i -g @railway/cli && railway login && railway up
+```
+
+Railway gives you a real server. Better for long-running processes and more control.
+
+### Both?
+Totally valid. Use Vercel for your frontend and Railway for background workers or separate services.
+
+**Quick heuristic**: If your app is mostly frontend with API routes → Vercel. If you need a persistent server process → Railway.
+
+## Project Structure
+
+```
+src/
+├── app/           # Pages and API routes (App Router)
+├── components/    # UI components
+│   ├── ui/        # Base components (shadcn/ui)
+│   └── features/  # Feature-specific components
+├── lib/           # Helpers (ai.ts, db.ts, ai-response.ts)
+├── hooks/         # Custom React hooks
+└── db/            # Database schemas (if using DB)
+```
+
+## Commands
+
+```bash
+npm run dev          # Start dev server
+npm run build        # Production build
+npm run lint         # Check for issues
+npm run type-check   # TypeScript validation
+npm run setup        # Full environment setup
+npm run check        # Check prerequisites
+npm run db:push      # Push DB schema changes
+npm run db:studio    # Open DB admin UI
+npm run test:e2e     # Run Playwright tests
+```
+
+## MCP Integrations
+
+This repo comes pre-configured with MCP servers for AI coding assistants:
+
+- **Playwright** — browser testing and automation
+- **Railway** — deploy and manage Railway services
+- **Context7** — look up library documentation
+
+See `.mcp.json` for configuration.
+
+---
+
+Built with good defaults so you don't have to make decisions. Just start building.
