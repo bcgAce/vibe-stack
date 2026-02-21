@@ -1,8 +1,10 @@
-# vibe-stack
+# Vibe Stack
 
-**A starter kit and step-by-step guide for building web apps with AI.** This repo gives you a production-ready codebase with database, auth, AI, and deployment pre-wired — plus the instructions to go from "I have an idea" to "it's live" even if you've never coded before.
+## From idea to live product with Claude Code
 
-You bring the idea. Claude Code (your AI pair programmer) does the building. This guide walks you through every step.
+**A starter kit and step-by-step guide for building with AI.** This repo gives you a production-ready codebase with database, auth, AI, and deployment pre-wired — plus the instructions to go from "I have an idea" to "it's live" even if you've never coded before.
+
+You bring the idea. Claude Code (your AI pair programmer) does the building. This guide walks you through every step. Start with a web app — and when you're ready, go mobile with [Expo](https://expo.dev/) using the same backend.
 
 ---
 
@@ -102,6 +104,30 @@ Save the output. You'll paste it during setup.
 
 > **Don't overthink it.** A few sentences about your idea is enough. The spec prompt does the heavy lifting. You can always change things later — this is a starting point, not a contract.
 
+### Accounts you might need
+
+Based on your spec's tech requirements, Claude will walk you through setting up the relevant accounts during `/setup`. All have free tiers — you won't pay anything to get started.
+
+**If your spec needs a database** → [Neon](https://neon.tech/) (recommended)
+A **database** is where your app stores information — user profiles, posts, orders, whatever your app saves. Neon gives you a Postgres database in the cloud for free. Think of it like a spreadsheet your app can read and write to, but way faster and more powerful.
+
+**If your spec needs user sign-in** → [Clerk](https://clerk.com/)
+Handles the entire login/signup flow so you don't have to build it yourself — passwords, email verification, "forgot password," all of it. A few thousand users on the free tier.
+
+**If your spec needs AI features** → [OpenAI](https://platform.openai.com/) or [Anthropic](https://console.anthropic.com/)
+Lets your app use AI models (like ChatGPT or Claude) to generate text, analyze data, or do anything "smart." You'll get an **API key** — basically a password that lets your app talk to their servers.
+
+**When you're ready to deploy** → [Vercel](https://vercel.com/) or [Railway](https://railway.com/)
+**Deploying** means putting your app on the internet so other people can use it. Vercel is the easiest option — connect your GitHub repo and it handles everything. Railway is better if your app needs background tasks or always-on processes.
+
+**None of these are required to start building.** The app runs locally without any of them. Claude will prompt you to set them up when your project actually needs them.
+
+### What's an environment variable?
+
+When you sign up for these services, they'll give you **API keys** — secret passwords that let your app connect to them. You store these in a file called `.env.development.local` that lives in your project but never gets uploaded to GitHub (it's automatically hidden from git for security).
+
+Claude handles creating this file and telling you which keys to paste where. You just copy from the service's website and paste when Claude asks.
+
 ---
 
 ## Step 2: Create Your Repo
@@ -125,7 +151,7 @@ Replace `YOUR_USERNAME` and `your-project` with your actual GitHub username and 
 
 ### Git basics you'll need
 
-Git saves snapshots of your code called **commits**. Here's the handful of commands that matter:
+Git is the version control system that tracks changes to your code. It's how developers save their work, undo mistakes, and collaborate. GitHub is where your git repo lives online. Here's the handful of commands that matter:
 
 ```bash
 git add .                    # Stage all your changes
@@ -134,7 +160,9 @@ git push                     # Upload to GitHub
 git status                   # See what's changed
 ```
 
-Don't worry about memorizing these — Claude Code handles most git operations for you. When you want to save your work, just tell Claude: _"commit my changes"_ and it'll do the right thing.
+Once you deploy (later in this guide), `git push` does double duty — it saves your code to GitHub **and** triggers your hosting provider (Vercel or Railway) to automatically deploy the latest version. Push your code, your site updates. That's it.
+
+Don't worry about memorizing these — Claude Code handles most git operations for you. When you want to save your work, just tell Claude: _"commit and push my changes"_ and it'll do the right thing.
 
 ---
 
@@ -174,6 +202,8 @@ Claude will:
 3. Set up the features your app needs (database, auth, AI — only what's relevant)
 4. Create your database schema based on your spec's data model
 5. Start the dev server and verify everything works
+
+**You'll be prompted to approve things a lot.** Claude Code asks permission before running commands, installing packages, or making changes to your files. This is a safety feature, not a warning sign — **saying yes is safe.** As you get comfortable, you can tell Claude to stop asking for specific commands, or press the "always allow" option.
 
 Open [localhost:3000](http://localhost:3000). You should see your app running.
 
@@ -247,62 +277,42 @@ Everything is pre-wired. Nothing crashes when it's not configured.
 - **Forms + validation** — react-hook-form + Zod
 - **Rate limiting, RBAC, pagination, CSV export** — the boring stuff, already done
 - **Claude Code skills** — slash commands and subagents for common workflows
+- **Mobile-ready** — your API routes double as a backend for [Expo](https://expo.dev/) / React Native when you're ready to go native
 
 ---
 
 ## Optional Features
 
-Everything below is opt-in. Add env vars when you need them, ignore when you don't.
+Everything below is opt-in. `/setup` handles most of this for you — this section is here as a reference if you need to add something later or set it up manually.
+
+Each feature is activated by adding keys to your `.env.development.local` file (the one Claude created during setup). No keys = feature stays off. No crashes, no errors.
 
 ### AI — OpenAI + Anthropic
 
-```bash
-# .env.development.local
-OPENAI_API_KEY=sk-your-key
-ANTHROPIC_API_KEY=sk-ant-your-key
-```
+Add your key(s) and your app can generate text, analyze data, and more:
 
-Get keys: [OpenAI](https://platform.openai.com/) | [Anthropic](https://console.anthropic.com/)
+- Get an OpenAI key: [platform.openai.com](https://platform.openai.com/) → API Keys
+- Get an Anthropic key: [console.anthropic.com](https://console.anthropic.com/) → API Keys
 
-```typescript
-import { generateWithAI, generateTypedObject } from '@/lib/ai';
-
-const text = await generateWithAI('Write a haiku about shipping fast');
-const structured = await generateTypedObject(myZodSchema, 'Analyze this data...');
-```
+Claude already knows how to use these in your code — just describe the AI feature you want and it'll wire it up.
 
 ### Database — Any Postgres
 
-```bash
-# .env.development.local
-DATABASE_URL=postgresql://user:pass@host/db
-```
+Your app needs somewhere to store data. [Neon](https://neon.tech/) is recommended (free tier, takes 2 minutes to set up), but [Supabase](https://supabase.com/), [Railway](https://railway.com/), and local Postgres all work.
 
-Providers: [Neon](https://neon.tech/) (recommended, free tier) | [Supabase](https://supabase.com/) | [Railway](https://railway.com/) | local Postgres
+Once connected, you can browse your data visually:
 
 ```bash
-npm run db:push      # Sync schema to database
-npm run db:studio    # Visual database browser
+npm run db:studio    # Opens a visual database browser
 ```
 
 ### Auth — Clerk
 
-```bash
-# .env.development.local
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-```
-
-Get keys: [clerk.com](https://clerk.com/) — create an app, copy the keys. Auth middleware activates automatically.
+Adds login, signup, and user management. Create an app at [clerk.com](https://clerk.com/), copy the keys, and auth activates automatically — including protected routes and role-based access.
 
 ### Analytics — PostHog
 
-```bash
-# .env.development.local
-NEXT_PUBLIC_POSTHOG_KEY=phc_your-key
-```
-
-Get key: [posthog.com](https://posthog.com/) — generous free tier. Tracking activates automatically.
+Tracks how people use your app. Sign up at [posthog.com](https://posthog.com/) (generous free tier), grab your project API key, and tracking starts automatically.
 
 ---
 
