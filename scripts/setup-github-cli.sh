@@ -125,10 +125,22 @@ echo "🔐 Setting up GitHub authentication..."
 gh auth login
 
 echo "✅ GitHub CLI setup complete!"
+
+# Set up backlog labels if inside a GitHub repo
+if gh repo view &> /dev/null; then
+    echo ""
+    echo "📋 Setting up backlog labels..."
+    gh label create "backlog"  --description "Ideas and future work"    --color "0E8A16" --force 2>/dev/null
+    gh label create "idea"     --description "Raw idea — needs refining" --color "1D76DB" --force 2>/dev/null
+    gh label create "bug"      --description "Something is broken"      --color "D73A4A" --force 2>/dev/null
+    gh label create "quick-win" --description "Small effort, clear value" --color "FEF2C0" --force 2>/dev/null
+    echo "✅ Backlog labels ready"
+fi
+
 echo ""
 echo "Next steps:"
 echo "1. You can now create PRs with: gh pr create"
-echo "2. View issues with: gh issue list"
-echo "3. Clone repos with: gh repo clone owner/repo"
+echo "2. Log ideas with: gh issue create --label idea --title \"my idea\""
+echo "3. View your backlog: gh issue list --label backlog"
 echo ""
 echo "For more commands, run: gh --help"

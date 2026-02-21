@@ -9,6 +9,7 @@ npm test
 ```
 
 `npm test` runs Playwright with the `chromium` project only for a fast default loop.
+On first run it may download the Chromium browser binary.
 
 ## Available Commands
 

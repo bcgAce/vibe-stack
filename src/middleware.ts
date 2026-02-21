@@ -6,6 +6,8 @@ const isPublicRoute = createRouteMatcher(['/sign-in(.*)']);
 const clerkEnabled =
   !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && !!process.env.CLERK_SECRET_KEY;
 
+// WARNING: When active, ALL auth is bypassed. Only safe in local dev.
+// Cannot activate in production (NODE_ENV must not be 'production').
 const isPlaywrightTesting =
   process.env.NODE_ENV !== 'production' && process.env.PLAYWRIGHT_TESTING === 'true';
 

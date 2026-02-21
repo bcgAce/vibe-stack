@@ -30,6 +30,10 @@
 - `/db-studio` — Open Drizzle Studio
 - `/db-push` — Push schema changes
 
+**Backlog:**
+
+- `/backlog [idea]` — Quick-capture an idea to GitHub Issues
+
 **Skills (workflow shortcuts):**
 
 - `/add-feature [description]` — Scaffold a new page + API route + component
@@ -310,6 +314,49 @@ export async function GET() {
   return csvResponse(data, 'tasks-export.csv');
 }
 ```
+
+## Backlog & Idea Management
+
+Use GitHub Issues as your backlog. It's already in your stack — no extra tools needed.
+
+### Quick Capture
+
+```bash
+# Capture an idea
+gh issue create --label idea --title "Add dark mode toggle"
+
+# Log a bug
+gh issue create --label bug --title "Login redirect broken on Safari"
+
+# Capture a quick win
+gh issue create --label quick-win --title "Add favicon"
+```
+
+Or just tell your AI assistant: `/backlog add a settings page for user preferences`
+
+### View Your Backlog
+
+```bash
+gh issue list                      # Everything open
+gh issue list --label idea         # Raw ideas
+gh issue list --label backlog      # Defined work
+gh issue list --label quick-win    # Easy wins for momentum
+```
+
+### Labels
+
+These are created automatically by `/gh-setup`:
+
+| Label       | Purpose                       |
+| ----------- | ----------------------------- |
+| `backlog`   | Defined work — ready to build |
+| `idea`      | Raw thought — needs refining  |
+| `bug`       | Something is broken           |
+| `quick-win` | Small effort, clear value     |
+
+### When to Level Up
+
+When your backlog gets big or you're working with others, consider moving to a dedicated tool like [Linear](https://linear.app/), [Plane](https://plane.so/), or GitHub Projects. But for solo building, Issues are enough.
 
 ## Deployment
 

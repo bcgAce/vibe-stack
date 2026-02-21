@@ -71,3 +71,11 @@ drizzle/schema.ts
 drizzle/relations.ts
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Secrets & credentials — catch common mistakes
+*.key
+*.secret
+*credentials*.json
+.gcloud/
+.aws/
+.ssh/

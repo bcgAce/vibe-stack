@@ -134,6 +134,8 @@ CLERK_SECRET_KEY=sk_test_...
 2. Create an application and copy the keys
 3. That's it — auth middleware activates automatically
 
+Without Clerk keys, the app stays open and `/sign-in` shows a setup hint instead of crashing.
+
 ### Analytics — PostHog
 
 ```bash
@@ -199,7 +201,7 @@ npm run setup        # Full environment setup
 npm run check        # Check prerequisites
 npm run db:push      # Push DB schema changes
 npm run db:studio    # Open DB admin UI
-npm test             # Run Playwright smoke tests (chromium)
+npm test             # Install Chromium (if needed) + run Playwright smoke tests
 npm run test:e2e     # Run Playwright tests
 ```
 

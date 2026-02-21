@@ -29,12 +29,17 @@ export function toCsv<T extends Record<string, unknown>>(data: T[]): string {
     headers
       .map((header) => {
         const value = row[header];
-        const str =
+        let str =
           value === null || value === undefined
             ? ''
             : typeof value === 'object'
               ? JSON.stringify(value)
               : String(value as string | number | boolean);
+        // Prevent CSV formula injection — prefix dangerous chars so spreadsheets
+        // don't interpret cell values as formulas (=CMD, +HYPERLINK, etc.)
+        if (/^[=+\-@\t\r]/.test(str)) {
+          str = `'${str}`;
+        }
         return str.includes(',') || str.includes('"') || str.includes('\n')
           ? `"${str.replace(/"/g, '""')}"`
           : str;

@@ -11,11 +11,15 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m'
+HAS_FAILURE=0
 
 ok() { echo -e "${GREEN}  [ok] $1${NC}"; }
 skip() { echo -e "${YELLOW}  [skip] $1${NC}"; }
 info() { echo -e "${BLUE}  [info] $1${NC}"; }
-fail() { echo -e "${RED}  [fail] $1${NC}"; }
+fail() {
+    echo -e "${RED}  [fail] $1${NC}"
+    HAS_FAILURE=1
+}
 
 ENV_FILE=".env.development.local"
 
@@ -132,4 +136,9 @@ if command -v lsof &> /dev/null; then
 fi
 
 echo ""
+if [[ "$HAS_FAILURE" -eq 1 ]]; then
+    echo "Setup issues found. Fix the [fail] items above, then re-run 'npm run check'."
+    exit 1
+fi
+
 echo "You're good to go! Run 'npm run dev' to start."

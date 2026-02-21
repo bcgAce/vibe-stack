@@ -21,7 +21,11 @@ import type { NextRequest } from 'next/server';
  *
  *     let query = db.select().from(tasks);
  *     if (filters.status) query = query.where(eq(tasks.status, filters.status));
- *     if (filters.search) query = query.where(ilike(tasks.title, `%${filters.search}%`));
+ *     if (filters.search) {
+ *       // Escape LIKE wildcards to prevent pattern injection
+ *       const safe = filters.search.replace(/[%_]/g, '\\$&');
+ *       query = query.where(ilike(tasks.title, `%${safe}%`));
+ *     }
  *   }
  */
 

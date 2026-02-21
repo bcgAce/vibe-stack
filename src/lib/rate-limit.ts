@@ -1,6 +1,11 @@
 /**
  * Simple in-memory rate limiter for API routes.
  *
+ * NOTE: Works for single-process servers (Railway, self-hosted).
+ * For serverless (Vercel), each invocation gets a fresh instance, so this
+ * won't persist across requests. Use Upstash Redis or Vercel KV instead:
+ * https://upstash.com/blog/next-rate-limiting
+ *
  * Usage:
  *   import { rateLimit } from '@/lib/rate-limit';
  *
