@@ -1,19 +1,18 @@
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
-import ws from 'ws';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
 
 // Database is optional — if DATABASE_URL isn't set, db will be null.
-// Check for it before using: if (!db) throw new Error('Database not configured');
+// Check for it before using: if (!db) return ApiResponse.error('Database not configured', 503);
+// Works with any Postgres provider: Neon, Supabase, Railway, local, etc.
 
-let db: NeonDatabase | null = null;
-let pool: Pool | null = null;
+let db: PostgresJsDatabase | null = null;
+let client: postgres.Sql | null = null;
 
 if (process.env.DATABASE_URL) {
-  neonConfig.webSocketConstructor = ws;
-  pool = new Pool({ connectionString: process.env.DATABASE_URL });
-  db = drizzle({ client: pool });
+  client = postgres(process.env.DATABASE_URL);
+  db = drizzle(client);
 }
 
-export { db, pool };
+export { db, client };
 export default db;

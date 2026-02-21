@@ -126,7 +126,7 @@ This gives you consistent error responses, validation handling, and proper statu
 
 ### Database (Optional)
 
-Set `DATABASE_URL` in `.env.development.local` and the database activates. Without it, the app works fine — just no database features.
+Set `DATABASE_URL` in `.env.development.local` and the database activates. Without it, the app works fine — just no database features. Works with any Postgres provider (Neon, Supabase, Railway, local).
 
 ```typescript
 // Define schemas in src/db/schema/

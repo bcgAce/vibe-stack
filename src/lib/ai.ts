@@ -8,16 +8,16 @@ type Provider = 'openai' | 'anthropic';
 
 function getModel(provider: Provider = 'openai'): LanguageModel {
   if (provider === 'anthropic') {
-    return anthropic('claude-sonnet-4-5-20250929');
+    return anthropic('claude-opus-4-6');
   }
-  return openai('gpt-4o');
+  return openai('gpt-5.2');
 }
 
 // Simple text generation
 export async function generateWithAI(
   prompt: string,
   systemMessage?: string,
-  provider: Provider = 'openai'
+  provider: Provider = 'openai',
 ) {
   const { text } = await generateText({
     model: getModel(provider),
@@ -35,7 +35,7 @@ export async function generateTypedObject<T>(
   schema: z.ZodSchema<T>,
   prompt: string,
   systemMessage?: string,
-  provider: Provider = 'openai'
+  provider: Provider = 'openai',
 ): Promise<T> {
   const { object } = await generateObject({
     model: getModel(provider),

@@ -24,7 +24,7 @@ Open http://localhost:3000 — you're up and running.
 - **Tailwind CSS** + **shadcn/ui** components
 - **Dark mode** via next-themes
 - **Vercel AI SDK** with OpenAI + Anthropic support
-- **Neon Postgres** + **Drizzle ORM** (optional)
+- **Postgres** + **Drizzle ORM** — works with Neon, Supabase, Railway, any provider (optional)
 - **Clerk auth** (optional)
 - **PostHog analytics** (optional)
 - **Vercel** + **Railway** deployment support
@@ -91,17 +91,21 @@ const result = await generateTypedObject(mySchema, 'Analyze this data...');
 const text = await generateWithAI('Hello', undefined, 'anthropic');
 ```
 
-### Database — Neon Postgres
+### Database — Any Postgres
 
 ```bash
 # Add to .env.development.local
 DATABASE_URL=postgresql://user:pass@host/db
 ```
 
-1. Sign up at [neon.tech](https://neon.tech/) (free tier available)
-2. Create a project and copy the connection string
-3. Define schemas in `src/db/schema/`
-4. Run `npm run db:push` to sync
+Works with any Postgres provider:
+
+- **Neon** (recommended): [neon.tech](https://neon.tech/) — free tier, serverless, great DX
+- **Supabase**: [supabase.com](https://supabase.com/) — free tier, comes with auth/storage too
+- **Railway**: [railway.com](https://railway.com/) — deploy Postgres alongside your app
+- **Local**: `postgresql://postgres:postgres@localhost:5432/mydb`
+
+Then define schemas in `src/db/schema/` and run `npm run db:push` to sync.
 
 ### Auth — Clerk
 
@@ -180,6 +184,7 @@ npm run setup        # Full environment setup
 npm run check        # Check prerequisites
 npm run db:push      # Push DB schema changes
 npm run db:studio    # Open DB admin UI
+npm test             # Run Playwright smoke tests (chromium)
 npm run test:e2e     # Run Playwright tests
 ```
 
