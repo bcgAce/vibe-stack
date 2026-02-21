@@ -1,24 +1,26 @@
 # vibe-stack
 
-A batteries-included Next.js starter for shipping web apps fast with AI coding assistants. Database, auth, AI — all pre-wired, all optional. You describe what to build. Claude builds it.
+**A starter kit and step-by-step guide for building web apps with AI.** This repo gives you a production-ready codebase with database, auth, AI, and deployment pre-wired — plus the instructions to go from "I have an idea" to "it's live" even if you've never coded before.
+
+You bring the idea. Claude Code (your AI pair programmer) does the building. This guide walks you through every step.
 
 ---
 
 ## How This Works
 
-1. You write a short spec describing your app idea
-2. You clone this template and open it with Claude Code
-3. You type `/setup` and paste your spec
-4. Claude sets up your database, auth, AI — whatever your app needs
-5. You start building features by describing them in plain English
+1. You follow this guide to get set up (takes ~15 minutes)
+2. You write a short spec describing your app idea
+3. You create your own copy of this repo — a ready-to-go codebase with everything wired up
+4. You type `/setup` in Claude Code and paste your spec
+5. Claude configures your app and you start building features in plain English
 
-The rest of this README walks you through each step. **Skip any section you've already done.** Not everyone starts from zero.
+**Already have accounts and tools installed?** Skip ahead to [Step 1](#step-1-write-your-spec). Not everyone starts from zero.
 
 ---
 
 ## Table of Contents
 
-- [Step 0: Prerequisites](#step-0-prerequisites) — two accounts, one install
+- [Step 0: Prerequisites](#step-0-prerequisites) — two accounts, two installs
 - [Step 1: Write Your Spec](#step-1-write-your-spec) — describe what you're building
 - [Step 2: Create Your Repo](#step-2-create-your-repo) — clone the template
 - [Step 3: Set Up Claude Code](#step-3-set-up-claude-code) — your AI pair programmer
@@ -33,7 +35,7 @@ The rest of this README walks you through each step. **Skip any section you've a
 
 ## Step 0: Prerequisites
 
-Two accounts and one install. Skip anything you've already got.
+Two accounts and two installs. Skip anything you've already got.
 
 ### 1. A GitHub account
 
@@ -43,7 +45,18 @@ Where your code lives. If you don't have one: [github.com/signup](https://github
 
 Powers your AI coding assistant. Sign up at [anthropic.com](https://www.anthropic.com/) — you'll need either API access or a Max subscription.
 
-### 3. Install Claude Code
+### 3. Install VS Code
+
+Your code editor. Download it at [code.visualstudio.com](https://code.visualstudio.com/). Install it, open it. That's it.
+
+You'll use VS Code's built-in terminal to run commands. Open it with:
+
+- **Mac**: <kbd>Ctrl</kbd> + <kbd>`</kbd> (backtick — the key above Tab)
+- **Windows/Linux**: <kbd>Ctrl</kbd> + <kbd>`</kbd>
+
+Or go to **View → Terminal** from the menu. This is where you'll type every command in this guide.
+
+### 4. Install Claude Code
 
 Claude Code is your AI pair programmer. It lives in your terminal, reads your codebase, and builds features from plain English. One command to install:
 
@@ -93,14 +106,35 @@ Save the output. You'll paste it during setup.
 
 ## Step 2: Create Your Repo
 
-Click **"Use this template"** on the [GitHub repo page](https://github.com/bcgAce/vibe-stack) to create your own copy, then clone it:
+A **repo** (repository) is a folder for your project that lives on GitHub. It tracks every change you make, so you can always undo mistakes. Think of it as a save-file system for your entire project.
+
+### Create your copy
+
+Click **"Use this template"** on the [GitHub repo page](https://github.com/bcgAce/vibe-stack). Give it a name (your project name works great), then click **Create repository**.
+
+### Clone it to your computer
+
+"Cloning" just means downloading your repo so you can work on it locally. In your VS Code terminal:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/your-project.git
 cd your-project
 ```
 
-> **Repo owner note**: To enable the "Use this template" button, go to Settings → check "Template repository".
+Replace `YOUR_USERNAME` and `your-project` with your actual GitHub username and repo name.
+
+### Git basics you'll need
+
+Git saves snapshots of your code called **commits**. Here's the handful of commands that matter:
+
+```bash
+git add .                    # Stage all your changes
+git commit -m "what I did"   # Save a snapshot with a message
+git push                     # Upload to GitHub
+git status                   # See what's changed
+```
+
+Don't worry about memorizing these — Claude Code handles most git operations for you. When you want to save your work, just tell Claude: _"commit my changes"_ and it'll do the right thing.
 
 ---
 
