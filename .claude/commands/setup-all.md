@@ -2,6 +2,4 @@
 description: Complete automated development environment setup
 ---
 
-Complete automated development environment setup including Node.js, CLI tools, authentication, and project dependencies.
-
-!AI_SLASH_COMMAND=1 ./scripts/setup-all.sh
+Run the setup-all skill to walk the user through setting up their vibe-stack project from scratch. Follow the SKILL.md instructions step by step. Be conversational and helpful — this is likely their first time.

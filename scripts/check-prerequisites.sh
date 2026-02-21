@@ -8,12 +8,14 @@ echo ""
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
 ok() { echo -e "${GREEN}  [ok] $1${NC}"; }
 skip() { echo -e "${YELLOW}  [skip] $1${NC}"; }
 info() { echo -e "${BLUE}  [info] $1${NC}"; }
+fail() { echo -e "${RED}  [fail] $1${NC}"; }
 
 ENV_FILE=".env.development.local"
 
@@ -47,10 +49,15 @@ has_env_value() {
 
 echo "Core:"
 if command -v node &> /dev/null; then
-    NODE_VERSION=$(node --version)
-    ok "Node.js $NODE_VERSION"
+    NODE_VERSION=$(node --version | sed 's/v//')
+    NODE_MAJOR=$(echo "$NODE_VERSION" | cut -d. -f1)
+    if [[ "$NODE_MAJOR" -ge 22 ]]; then
+        ok "Node.js v$NODE_VERSION"
+    else
+        fail "Node.js v$NODE_VERSION (v22+ required)"
+    fi
 else
-    skip "Node.js not found — install from https://nodejs.org/"
+    fail "Node.js not found — install from https://nodejs.org/"
 fi
 
 if command -v npm &> /dev/null; then
@@ -86,12 +93,6 @@ else
     info "Railway CLI not installed — npm i -g @railway/cli"
 fi
 
-if command -v neonctl &> /dev/null; then
-    ok "Neon CLI"
-else
-    info "Neon CLI not installed — npm i -g neonctl (only needed for DB branching)"
-fi
-
 echo ""
 echo "Environment:"
 if [[ -f "$ENV_FILE" ]]; then
@@ -112,12 +113,12 @@ if [[ -f "$ENV_FILE" ]]; then
     if has_env_value "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" && has_env_value "CLERK_SECRET_KEY"; then
         ok "Clerk auth configured"
     elif has_env_value "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" || has_env_value "CLERK_SECRET_KEY"; then
-        info "Clerk auth partially configured — set both NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY"
+        fail "Clerk auth partially configured — set both NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY"
     else
         info "Clerk not configured — auth disabled (that's fine!)"
     fi
 else
-    info "No .env.development.local — create one when you need env vars"
+    info "No .env.development.local — run 'npm run setup' or copy .env.example"
 fi
 
 echo ""

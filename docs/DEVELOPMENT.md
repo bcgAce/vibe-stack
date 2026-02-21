@@ -18,7 +18,7 @@ Create `.env.development.local` with whatever you need:
 OPENAI_API_KEY=sk-your-key
 ANTHROPIC_API_KEY=sk-ant-your-key
 
-# Database (Neon Postgres)
+# Database (Postgres - Neon recommended)
 DATABASE_URL=postgresql://user:pass@host/db
 
 # Auth (Clerk)
@@ -30,7 +30,8 @@ None of these are required to start the dev server.
 
 ## Database (Optional)
 
-Uses **Neon Postgres** with **Drizzle ORM**.
+Uses **Postgres** with **Drizzle ORM**.
+Neon is recommended, but Supabase, Railway Postgres, and local Postgres all work.
 
 ```bash
 npm run db:push      # Push schema changes (development)
@@ -41,6 +42,7 @@ npm run db:studio    # Open database admin UI
 ## Deployment
 
 ### Vercel
+
 ```bash
 npm i -g vercel
 vercel login
@@ -49,6 +51,7 @@ vercel --prod
 ```
 
 ### Railway
+
 ```bash
 npm i -g @railway/cli
 railway login
@@ -59,7 +62,7 @@ railway up
 ## Stack
 
 - **Framework**: Next.js 15 (App Router)
-- **Database**: Neon Postgres + Drizzle ORM (optional)
+- **Database**: Postgres + Drizzle ORM (optional, Neon recommended)
 - **AI**: Vercel AI SDK with OpenAI + Anthropic (optional)
 - **Auth**: Clerk (optional)
 - **Styling**: Tailwind CSS

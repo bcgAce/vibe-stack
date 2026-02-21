@@ -6,11 +6,15 @@ import { z } from 'zod';
 
 type Provider = 'openai' | 'anthropic';
 
+// Models in preference order — falls back if the first isn't available on your account
+const OPENAI_MODELS = ['gpt-5.2', 'gpt-4o'] as const;
+const ANTHROPIC_MODELS = ['claude-opus-4-6', 'claude-sonnet-4-5-20250929'] as const;
+
 function getModel(provider: Provider = 'openai'): LanguageModel {
   if (provider === 'anthropic') {
-    return anthropic('claude-opus-4-6');
+    return anthropic(process.env.ANTHROPIC_MODEL ?? ANTHROPIC_MODELS[0]);
   }
-  return openai('gpt-5.2');
+  return openai(process.env.OPENAI_MODEL ?? OPENAI_MODELS[0]);
 }
 
 // Simple text generation

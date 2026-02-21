@@ -1,6 +1,7 @@
 # Technology Stack
 
 ## Core
+
 - **Node.js**: 22.x LTS
 - **Framework**: Next.js 15.x (App Router)
 - **Language**: TypeScript
@@ -8,16 +9,19 @@
 - **UI Components**: shadcn/ui
 
 ## Optional
-- **Database**: Neon Postgres + Drizzle ORM
+
+- **Database**: Postgres + Drizzle ORM (Neon recommended; Supabase/Railway/local also work)
 - **Auth**: Clerk
 - **AI**: Vercel AI SDK (OpenAI + Anthropic)
 
 ## Deployment
+
 - **Vercel** — best for frontend-heavy apps, serverless
 - **Railway** — best for backend-heavy apps, persistent processes
 - Both work great with this stack
 
 ## Directory Structure
+
 ```
 src/
 ├── app/                   # Next.js App Router (pages + API routes)

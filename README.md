@@ -4,19 +4,34 @@ A batteries-included Next.js starter for building cool stuff fast. AI, database,
 
 ## Get Started
 
-Click **"Use this template"** on GitHub to create your own repo, then:
+### Step 1: Write your spec
+
+Before you touch any code, describe what you're building. Open [ChatGPT](https://chat.openai.com) or [Claude](https://claude.ai) and use the [spec prompt](docs/SPEC_PROMPT.md) to generate a short spec. Save the output — you'll paste it during setup.
+
+### Step 2: Create your repo
+
+Click **"Use this template"** on GitHub to create your own copy, then:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/your-project.git
 cd your-project
-cp .env.example .env.development.local
-npm install
-npm run dev
 ```
 
-Open http://localhost:3000 — you're up and running.
+### Step 3: Set up with Claude Code
+
+Open the project in VS Code, launch Claude Code, and type `/setup`. Claude will:
+
+1. Check your environment and install what's missing
+2. Ask you to paste your spec
+3. Set up exactly the features your app needs (database, auth, AI)
+4. Create your database schema based on your spec's data model
+5. Start the dev server and verify everything works
+
+That's it. Start building.
 
 > **Repo owner**: To enable the "Use this template" button, go to your repo's Settings → check "Template repository".
+
+> **No Claude Code?** You can also run `npm run setup` in the terminal for a basic setup, then configure `.env.development.local` manually.
 
 ## What's Included
 
