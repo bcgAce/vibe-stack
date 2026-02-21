@@ -18,7 +18,7 @@ The rest of this README walks you through each step. **Skip any section you've a
 
 ## Table of Contents
 
-- [Step 0: Prerequisites](#step-0-prerequisites) — accounts and tools you'll need
+- [Step 0: Prerequisites](#step-0-prerequisites) — two accounts, one install
 - [Step 1: Write Your Spec](#step-1-write-your-spec) — describe what you're building
 - [Step 2: Create Your Repo](#step-2-create-your-repo) — clone the template
 - [Step 3: Set Up Claude Code](#step-3-set-up-claude-code) — your AI pair programmer
@@ -33,51 +33,43 @@ The rest of this README walks you through each step. **Skip any section you've a
 
 ## Step 0: Prerequisites
 
-You need three things. Everything else is optional and can be added later.
+Two accounts and one install. Skip anything you've already got.
 
-### A GitHub account
+### 1. A GitHub account
 
-If you don't have one: [github.com/signup](https://github.com/signup). Free. Takes 2 minutes.
+Where your code lives. If you don't have one: [github.com/signup](https://github.com/signup). Free. Takes 2 minutes.
 
-You'll use this to create your project from the template and manage your code.
+### 2. An Anthropic account
 
-### Node.js 22+
+Powers your AI coding assistant. Sign up at [anthropic.com](https://www.anthropic.com/) — you'll need either API access or a Max subscription.
 
-Check if you have it:
+### 3. Install Claude Code
 
-```bash
-node --version
-```
+Claude Code is your AI pair programmer. It lives in your terminal, reads your codebase, and builds features from plain English. One command to install:
 
-If that says `v22` or higher, you're good. If not (or if it says "command not found"):
-
-**Mac:**
+**Mac / Linux:**
 
 ```bash
-brew install node
+curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-No Homebrew? Install it first: [brew.sh](https://brew.sh/)
+**Windows** (PowerShell):
 
-**Windows/Linux:** Download from [nodejs.org](https://nodejs.org/) (use the LTS version).
-
-### Claude Code
-
-Claude Code is your AI coding assistant. It lives in your terminal and builds features from plain English descriptions.
-
-```bash
-npm install -g @anthropic-ai/claude-code
+```powershell
+irm https://claude.ai/install.ps1 | iex
 ```
 
-You'll need an Anthropic account with API access or a Max subscription. Sign up at [anthropic.com](https://www.anthropic.com/) if you don't have one.
-
-Verify it works:
+Close and reopen your terminal, then verify it worked:
 
 ```bash
 claude --version
 ```
 
-> **Already use Cursor or another AI editor?** This template works with any AI assistant, but the slash commands and skills are built for Claude Code. The setup scripts (`npm run setup`) work everywhere.
+If you see a version number, you're good. It auto-updates, so you never have to think about this again.
+
+> **Windows note**: Claude Code on Windows requires [Git Bash](https://git-scm.com/downloads/win). The installer will tell you if it's missing.
+
+> **Already use Cursor or another AI editor?** This template works with any AI coding assistant, but the slash commands and skills are built for Claude Code. The setup scripts (`npm run setup`) work everywhere.
 
 ---
 
@@ -106,7 +98,6 @@ Click **"Use this template"** on the [GitHub repo page](https://github.com/bcgAc
 ```bash
 git clone https://github.com/YOUR_USERNAME/your-project.git
 cd your-project
-npm install
 ```
 
 > **Repo owner note**: To enable the "Use this template" button, go to Settings → check "Template repository".
