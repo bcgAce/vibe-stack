@@ -156,6 +156,56 @@ This repo comes pre-configured with MCP servers for AI coding assistants:
 
 See `.mcp.json` for configuration.
 
+## Claude Code Skills
+
+vibe-stack includes built-in skills you can invoke with slash commands:
+
+- `/add-feature` — Scaffold a new page + API route + component
+- `/add-db-table` — Create a Drizzle schema, push it, generate queries
+- `/deploy` — Build, validate, and deploy to Vercel or Railway
+- `/debug` — Systematic debugging with logs and browser inspection
+
+### Recommended Community Skills
+
+Install these to supercharge your vibe coding workflow:
+
+```bash
+# Find and discover new skills
+claude skill install vercel-labs/skills/find-skills
+
+# React best practices from Vercel
+claude skill install vercel-labs/agent-skills/vercel-react-best-practices
+
+# Web design guidelines
+claude skill install vercel-labs/agent-skills/web-design-guidelines
+
+# Next.js patterns
+claude skill install vercel-labs/next-skills/next-best-practices
+
+# Frontend design methodology
+claude skill install anthropics/skills/frontend-design
+
+# Structured debugging
+claude skill install obra/superpowers/systematic-debugging
+
+# Test-driven development
+claude skill install obra/superpowers/test-driven-development
+
+# Web app testing patterns
+claude skill install anthropics/skills/webapp-testing
+```
+
+Browse all available skills at [skills.sh](https://skills.sh/).
+
+## Subagents
+
+vibe-stack includes custom subagents for isolated code review:
+
+- **code-reviewer** — Reviews for bugs, security issues, and pattern violations
+- **ui-reviewer** — Checks visual quality, accessibility, and responsive design
+
+Use them by telling Claude: *"Use a subagent to review this code"* or *"Use the ui-reviewer to check this page."*
+
 ---
 
 Built with good defaults so you don't have to make decisions. Just start building.

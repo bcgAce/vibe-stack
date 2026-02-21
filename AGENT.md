@@ -27,6 +27,16 @@
 - `/db-studio` — Open Drizzle Studio
 - `/db-push` — Push schema changes
 
+**Skills (workflow shortcuts):**
+- `/add-feature [description]` — Scaffold a new page + API route + component
+- `/add-db-table [description]` — Create a Drizzle schema, push it, generate queries
+- `/deploy [vercel|railway]` — Build, validate, and deploy
+- `/debug [description]` — Systematic debugging workflow
+
+**Subagents (isolated review):**
+- Tell Claude: *"Use the code-reviewer to review my changes"*
+- Tell Claude: *"Use the ui-reviewer to check this page"*
+
 ## Project Structure
 
 ```
@@ -265,6 +275,15 @@ Edit `eslint.config.mjs`:
 - Add error tracking (Sentry, LogRocket)
 - Set up performance monitoring
 - Add uptime checks
+
+## Environment Variables
+
+Copy `.env.example` to get started:
+```bash
+cp .env.example .env.development.local
+```
+
+All env vars are optional — the app works without any of them.
 
 ## Documentation
 
