@@ -1,3 +1,4 @@
+import { PostHogProvider } from '@/components/posthog-provider';
 import { MyThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Inter } from 'next/font/google';
@@ -8,12 +9,20 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 const clerkEnabled =
-  !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-  !!process.env.CLERK_SECRET_KEY;
+  !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && !!process.env.CLERK_SECRET_KEY;
 
 export const metadata = {
-  title: 'vibe-stack',
+  title: {
+    default: 'vibe-stack',
+    template: '%s | vibe-stack',
+  },
   description: 'Build cool stuff fast',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  openGraph: {
+    title: 'vibe-stack',
+    description: 'Build cool stuff fast',
+    type: 'website',
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -28,12 +37,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const content = (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <MyThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <ClientLayout isSignedIn={isSignedIn} authEnabled={clerkEnabled}>
-            {children}
-          </ClientLayout>
-          <Toaster />
-        </MyThemeProvider>
+        <PostHogProvider>
+          <MyThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ClientLayout isSignedIn={isSignedIn} authEnabled={clerkEnabled}>
+              {children}
+            </ClientLayout>
+            <Toaster />
+          </MyThemeProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

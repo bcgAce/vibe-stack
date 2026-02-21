@@ -57,7 +57,8 @@ dev-server.log
 .idea/
 *.swp
 *.swo
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 
 # Temporary files
 # AI archive (temporary, cleaned by script)

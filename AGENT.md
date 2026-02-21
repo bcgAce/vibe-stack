@@ -12,30 +12,35 @@
 ## Slash Commands
 
 **Setup:**
+
 - `/setup` — Full environment setup
 - `/check` — Validate what's installed
 - `/auth` — Set up service authentication
 - `/gh-setup` — Configure GitHub CLI
 
 **Dev:**
+
 - `/dev` — Start dev server with Turbopack
 - `/build` — Production build
 - `/lint` — ESLint + TypeScript check
 - `/test` — Run tests
 
 **Database:**
+
 - `/db-studio` — Open Drizzle Studio
 - `/db-push` — Push schema changes
 
 **Skills (workflow shortcuts):**
+
 - `/add-feature [description]` — Scaffold a new page + API route + component
 - `/add-db-table [description]` — Create a Drizzle schema, push it, generate queries
 - `/deploy [vercel|railway]` — Build, validate, and deploy
 - `/debug [description]` — Systematic debugging workflow
 
 **Subagents (isolated review):**
-- Tell Claude: *"Use the code-reviewer to review my changes"*
-- Tell Claude: *"Use the ui-reviewer to check this page"*
+
+- Tell Claude: _"Use the code-reviewer to review my changes"_
+- Tell Claude: _"Use the ui-reviewer to check this page"_
 
 ## Project Structure
 
@@ -48,9 +53,14 @@ src/
 ├── lib/
 │   ├── ai.ts              # AI helpers (OpenAI + Anthropic)
 │   ├── ai-response.ts     # API response helpers
-│   └── db.ts              # Database connection (optional)
+│   ├── db.ts              # Database connection (optional)
+│   ├── rate-limit.ts      # API rate limiting helper
+│   ├── rbac.ts            # Role-based access control
+│   ├── pagination.ts      # API pagination helper
+│   ├── export-csv.ts      # CSV export utility
+│   └── search-params.ts   # URL query param parser
 ├── hooks/                 # Custom React hooks
-├── db/                    # Database schemas
+├── db/                    # Database schemas (projects → tasks example)
 └── middleware.ts           # Auth middleware (activates when Clerk is configured)
 docs/                       # Guides and references
 scripts/                    # Setup and utility scripts
@@ -85,12 +95,13 @@ const result = await generateTypedObject(
     summary: z.string(),
     tags: z.array(z.string()),
   }),
-  'Analyze this content...'
+  'Analyze this content...',
 );
 // result is fully typed — no JSON parsing needed
 ```
 
 **Getting API keys:**
+
 - **OpenAI**: [platform.openai.com](https://platform.openai.com/) → API Keys → Create new key
 - **Anthropic**: [console.anthropic.com](https://console.anthropic.com/) → API Keys → Create key
 
@@ -150,17 +161,169 @@ CLERK_SECRET_KEY=sk_test_...
 
 Sign up at [clerk.com](https://clerk.com/) and create an app to get your keys.
 
+### Analytics — PostHog (Optional)
+
+Set your PostHog key and analytics activate automatically. Without it, no tracking code runs.
+
+```bash
+NEXT_PUBLIC_POSTHOG_KEY=phc_your-key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+```
+
+Sign up at [posthog.com](https://posthog.com/) and grab your project API key from Settings.
+
+### Rate Limiting
+
+Use the built-in rate limiter to protect API routes:
+
+```typescript
+import { rateLimit } from '@/lib/rate-limit';
+import { ApiResponse } from '@/lib/ai-response';
+
+const limiter = rateLimit({ interval: 60_000, limit: 10 });
+
+export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') ?? 'unknown';
+  const { success } = limiter.check(ip);
+  if (!success) {
+    return ApiResponse.error('Too many requests', 429);
+  }
+  // ... handle request
+}
+```
+
+### Data Tables
+
+Use the `DataTable` component for sortable, filterable, paginated tables:
+
+```typescript
+'use client';
+import { type ColumnDef } from '@tanstack/react-table';
+import { DataTable } from '@/components/ui/data-table';
+
+const columns: ColumnDef<Task>[] = [
+  { accessorKey: 'title', header: 'Title' },
+  { accessorKey: 'status', header: 'Status' },
+  { accessorKey: 'priority', header: 'Priority' },
+];
+
+<DataTable columns={columns} data={tasks} searchKey="title" />
+```
+
+### Forms with Validation
+
+Use the `Form` component with react-hook-form and Zod:
+
+```typescript
+'use client';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+
+const schema = z.object({ name: z.string().min(1, 'Required') });
+
+function MyForm() {
+  const form = useForm({ resolver: zodResolver(schema), defaultValues: { name: '' } });
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit((data) => console.log(data))}>
+        <FormField control={form.control} name="name" render={({ field }) => (
+          <FormItem>
+            <FormLabel>Name</FormLabel>
+            <FormControl><Input {...field} /></FormControl>
+            <FormMessage />
+          </FormItem>
+        )} />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  );
+}
+```
+
+### Role-Based Access Control (RBAC)
+
+Server-side (API routes / Server Components):
+
+```typescript
+import { requireRole, hasRole } from '@/lib/rbac';
+
+// Throw if user isn't admin
+await requireRole('admin');
+
+// Check without throwing
+if (await hasRole('member')) {
+  /* ... */
+}
+```
+
+Client-side (conditionally show UI):
+
+```typescript
+import { RoleGate } from '@/components/role-gate';
+
+<RoleGate allowedRoles={['admin']}>
+  <AdminPanel />
+</RoleGate>
+```
+
+Roles: `admin` > `member` > `viewer` (hierarchical — admins can do everything members can).
+
+### Pagination
+
+```typescript
+import { parsePagination, paginatedResponse } from '@/lib/pagination';
+
+export async function GET(request: NextRequest) {
+  const { page, limit, offset } = parsePagination(request);
+  const items = await db.select().from(tasks).limit(limit).offset(offset);
+  // returns { data: [...], pagination: { page, limit, total, totalPages, hasNext, hasPrev } }
+  return paginatedResponse(items, totalCount, page, limit);
+}
+```
+
+### Search & Filtering
+
+```typescript
+import { parseSearchParams } from '@/lib/search-params';
+
+export async function GET(request: NextRequest) {
+  const filters = parseSearchParams(request, {
+    search: { type: 'string' },
+    status: { type: 'enum', values: ['todo', 'in_progress', 'done'] },
+    completed: { type: 'boolean' },
+  });
+  // Use filters to build your query
+}
+```
+
+### CSV Export
+
+```typescript
+import { csvResponse } from '@/lib/export-csv';
+
+export async function GET() {
+  const data = await db.select().from(tasks);
+  return csvResponse(data, 'tasks-export.csv');
+}
+```
+
 ## Deployment
 
 ### Vercel vs Railway — How to Choose
 
 **Vercel** — Best for frontend-heavy apps
+
 - Optimized for Next.js, zero config
 - Serverless functions for API routes
 - Automatic preview deployments on PRs
 - Great for: landing pages, dashboards, SPAs, content sites
 
 **Railway** — Best for backend-heavy apps
+
 - Real server (not serverless)
 - Persistent processes, WebSockets, cron jobs
 - More control over infrastructure
@@ -169,6 +332,7 @@ Sign up at [clerk.com](https://clerk.com/) and create an app to get your keys.
 **Quick heuristic**: Mostly frontend with API routes? → Vercel. Need a persistent server? → Railway. Not sure? → Start with Vercel, move to Railway if you hit serverless limits.
 
 ### Deploy to Vercel
+
 ```bash
 npm i -g vercel
 vercel login
@@ -177,6 +341,7 @@ vercel --prod
 ```
 
 ### Deploy to Railway
+
 ```bash
 npm i -g @railway/cli
 railway login
@@ -187,6 +352,7 @@ railway up
 ## Mobile Apps
 
 ### When to Build Native (React Native / Expo)
+
 - You need camera, push notifications, or other native device APIs
 - You want App Store / Play Store presence
 - You need offline-first with local storage
@@ -195,6 +361,7 @@ railway up
 Start with [Expo](https://expo.dev/) — it handles the hard parts. Your vibe-stack API routes can serve as the backend.
 
 ### When a PWA Is Enough
+
 - Content-focused app (reading, browsing, forms)
 - No native API requirements
 - Want one codebase for web + mobile
@@ -203,6 +370,7 @@ Start with [Expo](https://expo.dev/) — it handles the hard parts. Your vibe-st
 Add a `manifest.json` and service worker to this repo and you've got a PWA.
 
 ### When in Doubt
+
 Start with a PWA. Go native when you actually need native features. You can always add Expo later and share the backend.
 
 ## MCP-First Workflow
@@ -218,6 +386,7 @@ Configure in `.mcp.json` (Claude Code) or `.cursor/mcp.json` (Cursor).
 ## Code Style
 
 The ESLint config is relaxed. It catches real bugs without getting in your way:
+
 - `any` types are a warning, not an error
 - `console.log` is fine
 - Unused variables are warnings
@@ -254,7 +423,9 @@ No branch protection enforced — it's your project. But PRs are a good habit ev
 As your project grows, you might want to tighten things up:
 
 ### Stricter Linting
+
 Edit `eslint.config.mjs`:
+
 ```javascript
 '@typescript-eslint/no-explicit-any': 'error',    // Ban any types
 '@typescript-eslint/no-floating-promises': 'error', // Require await
@@ -262,16 +433,19 @@ Edit `eslint.config.mjs`:
 ```
 
 ### Testing
+
 - Add `data-testid` attributes to components for reliable E2E tests
 - Write Playwright tests for critical user flows
 - See `docs/testing-e2e.md` for patterns
 
 ### Code Review
+
 - Require PR reviews before merging
 - Add branch protection on `main`
 - Set up CI to run lint + type-check + tests
 
 ### Monitoring
+
 - Add error tracking (Sentry, LogRocket)
 - Set up performance monitoring
 - Add uptime checks
@@ -279,6 +453,7 @@ Edit `eslint.config.mjs`:
 ## Environment Variables
 
 Copy `.env.example` to get started:
+
 ```bash
 cp .env.example .env.development.local
 ```
@@ -297,4 +472,4 @@ All env vars are optional — the app works without any of them.
 
 ---
 
-*Build something cool. Ship it. Iterate.*
+_Build something cool. Ship it. Iterate._
