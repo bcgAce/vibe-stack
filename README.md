@@ -1,270 +1,382 @@
 # vibe-stack
 
-A batteries-included Next.js starter for building cool stuff fast. AI, database, auth — all optional, all pre-wired. Just start building.
+A batteries-included Next.js starter for shipping web apps fast with AI coding assistants. Database, auth, AI — all pre-wired, all optional. You describe what to build. Claude builds it.
 
-## Get Started
+---
 
-### Step 1: Write your spec
+## How This Works
 
-Before you touch any code, describe what you're building. Open [ChatGPT](https://chat.openai.com) or [Claude](https://claude.ai) and use the [spec prompt](docs/SPEC_PROMPT.md) to generate a short spec. Save the output — you'll paste it during setup.
+1. You write a short spec describing your app idea
+2. You clone this template and open it with Claude Code
+3. You type `/setup` and paste your spec
+4. Claude sets up your database, auth, AI — whatever your app needs
+5. You start building features by describing them in plain English
 
-### Step 2: Create your repo
+The rest of this README walks you through each step. **Skip any section you've already done.** Not everyone starts from zero.
 
-Click **"Use this template"** on GitHub to create your own copy, then:
+---
+
+## Table of Contents
+
+- [Step 0: Prerequisites](#step-0-prerequisites) — accounts and tools you'll need
+- [Step 1: Write Your Spec](#step-1-write-your-spec) — describe what you're building
+- [Step 2: Create Your Repo](#step-2-create-your-repo) — clone the template
+- [Step 3: Set Up Claude Code](#step-3-set-up-claude-code) — your AI pair programmer
+- [Step 4: Run Setup](#step-4-run-setup) — Claude configures everything
+- [Step 5: Start Building](#step-5-start-building) — the fun part
+- [What's Included](#whats-included) — everything in the box
+- [Optional Features](#optional-features) — add when you need them
+- [Deploying](#deploying) — ship it
+- [Reference](#reference) — commands, structure, tools
+
+---
+
+## Step 0: Prerequisites
+
+You need three things. Everything else is optional and can be added later.
+
+### A GitHub account
+
+If you don't have one: [github.com/signup](https://github.com/signup). Free. Takes 2 minutes.
+
+You'll use this to create your project from the template and manage your code.
+
+### Node.js 22+
+
+Check if you have it:
+
+```bash
+node --version
+```
+
+If that says `v22` or higher, you're good. If not (or if it says "command not found"):
+
+**Mac:**
+
+```bash
+brew install node
+```
+
+No Homebrew? Install it first: [brew.sh](https://brew.sh/)
+
+**Windows/Linux:** Download from [nodejs.org](https://nodejs.org/) (use the LTS version).
+
+### Claude Code
+
+Claude Code is your AI coding assistant. It lives in your terminal and builds features from plain English descriptions.
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+You'll need an Anthropic account with API access or a Max subscription. Sign up at [anthropic.com](https://www.anthropic.com/) if you don't have one.
+
+Verify it works:
+
+```bash
+claude --version
+```
+
+> **Already use Cursor or another AI editor?** This template works with any AI assistant, but the slash commands and skills are built for Claude Code. The setup scripts (`npm run setup`) work everywhere.
+
+---
+
+## Step 1: Write Your Spec
+
+Before you touch code, spend 5 minutes describing what you're building. This isn't busywork — Claude uses your spec to set up exactly the right database tables, pages, and features.
+
+Open [ChatGPT](https://chat.openai.com) or [Claude](https://claude.ai) and use the [spec prompt](docs/SPEC_PROMPT.md). It'll ask you to describe your idea, then generate a structured spec with:
+
+- App name and one-liner
+- User stories (what people can do)
+- Data model (what the app stores)
+- Pages (what screens exist)
+- Tech requirements (auth? database? AI?)
+
+Save the output. You'll paste it during setup.
+
+> **Don't overthink it.** A few sentences about your idea is enough. The spec prompt does the heavy lifting. You can always change things later — this is a starting point, not a contract.
+
+---
+
+## Step 2: Create Your Repo
+
+Click **"Use this template"** on the [GitHub repo page](https://github.com/bcgAce/vibe-stack) to create your own copy, then clone it:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/your-project.git
 cd your-project
+npm install
 ```
 
-### Step 3: Set up with Claude Code
+> **Repo owner note**: To enable the "Use this template" button, go to Settings → check "Template repository".
 
-Open the project in VS Code, launch Claude Code, and type `/setup`. Claude will:
+---
 
-1. Check your environment and install what's missing
+## Step 3: Set Up Claude Code
+
+Open your project folder and launch Claude Code:
+
+```bash
+cd your-project
+claude
+```
+
+First time? Claude will walk you through authenticating with your Anthropic account.
+
+Once you're in the Claude Code session, set up GitHub access:
+
+```
+/gh-setup
+```
+
+This installs the GitHub CLI and authenticates you. Lets you create PRs, manage issues, and deploy — all from the terminal.
+
+---
+
+## Step 4: Run Setup
+
+Still in Claude Code, type:
+
+```
+/setup
+```
+
+Claude will:
+
+1. Check your environment and install anything missing
 2. Ask you to paste your spec
-3. Set up exactly the features your app needs (database, auth, AI)
+3. Set up the features your app needs (database, auth, AI — only what's relevant)
 4. Create your database schema based on your spec's data model
 5. Start the dev server and verify everything works
 
-That's it. Start building.
+Open [localhost:3000](http://localhost:3000). You should see your app running.
 
-> **Repo owner**: To enable the "Use this template" button, go to your repo's Settings → check "Template repository".
+> **No Claude Code?** Run `npm run setup` in a regular terminal for basic environment setup, then copy `.env.example` to `.env.development.local` and fill in the values you need.
 
-> **No Claude Code?** You can also run `npm run setup` in the terminal for a basic setup, then configure `.env.development.local` manually.
+---
+
+## Step 5: Start Building
+
+Now the good part. Tell Claude what to build:
+
+```
+/add-feature user can create and edit blog posts with a rich text editor
+```
+
+```
+/add-db-table comments table — belongs to a post, has author name and body
+```
+
+```
+/backlog add search functionality to the posts page
+```
+
+Or just describe what you want in plain English. Claude reads your codebase and builds features that follow the existing patterns.
+
+### Useful commands
+
+| Command                       | What it does                                   |
+| ----------------------------- | ---------------------------------------------- |
+| `/add-feature [description]`  | Scaffold a page + API route + component        |
+| `/add-db-table [description]` | Create a database table and typed queries      |
+| `/backlog [idea]`             | Capture an idea to GitHub Issues for later     |
+| `/debug [description]`        | Systematic debugging with logs and screenshots |
+| `/lint`                       | Check for code issues                          |
+| `/test`                       | Run end-to-end tests                           |
+| `/build`                      | Production build                               |
+
+### Your backlog
+
+Ideas come fast. Capture them before they evaporate:
+
+```bash
+# In Claude Code
+/backlog add dark mode toggle to settings
+
+# Or from the terminal
+gh issue create --label idea --title "Add dark mode toggle"
+
+# View your backlog
+gh issue list --label idea
+```
+
+---
 
 ## What's Included
 
-- **Next.js 15** with App Router and TypeScript
-- **Tailwind CSS** + **shadcn/ui** components
-- **Dark mode** via next-themes
-- **Vercel AI SDK** with OpenAI + Anthropic support
-- **Postgres** + **Drizzle ORM** — works with Neon, Supabase, Railway, any provider (optional)
-- **Clerk auth** (optional)
-- **PostHog analytics** (optional)
-- **Vercel** + **Railway** deployment support
-- **Claude Code** slash commands, skills, and subagents
-- **Playwright** for E2E testing
-- **Prettier** + **husky** + **lint-staged** for consistent formatting
-- **Security headers** out of the box
-- **SEO defaults** (sitemap, robots.txt, OpenGraph metadata)
-- **Error pages** (404, error boundary, loading skeletons)
-- **Data tables** with sorting, filtering, pagination (TanStack Table)
-- **Forms** with validation (react-hook-form + Zod)
-- **RBAC** role-based access control helpers
-- **Pagination**, search/filter, and CSV export utilities
-- **Relational schema** example (projects → tasks)
+Everything is pre-wired. Nothing crashes when it's not configured.
 
-## What Are You Building?
+- **Next.js 15** — App Router, TypeScript, Turbopack
+- **Tailwind CSS + shadcn/ui** — looks good out of the box
+- **Dark mode** — via next-themes
+- **AI integration** — OpenAI + Anthropic via Vercel AI SDK (optional)
+- **Postgres + Drizzle ORM** — any provider, graceful without it (optional)
+- **Clerk auth** — sign-in, roles, middleware (optional)
+- **PostHog analytics** — event tracking, user analytics (optional)
+- **Security headers** — CSP, HSTS, X-Frame-Options, and friends
+- **Secret scanning** — pre-commit hook blocks accidental API key commits
+- **SEO defaults** — sitemap, robots.txt, OpenGraph metadata
+- **E2E testing** — Playwright, ready to go
+- **Data tables** — sorting, filtering, pagination (TanStack Table)
+- **Forms + validation** — react-hook-form + Zod
+- **Rate limiting, RBAC, pagination, CSV export** — the boring stuff, already done
+- **Claude Code skills** — slash commands and subagents for common workflows
 
-### Web App
-
-You're in the right place. This repo, deploy to Vercel or Railway.
-
-### Mobile App
-
-If you need native device features (camera, push notifications, app store presence), check out [Expo](https://expo.dev/) with React Native. Your Next.js API routes can still serve as the backend.
-
-### PWA (Progressive Web App)
-
-If you want a web app that feels native on mobile (installable, offline support) but don't need native APIs — this repo works great. Add a `manifest.json` and a service worker. Good for content-focused apps where one codebase for web + mobile is ideal.
-
-### When to go native vs PWA?
-
-- **PWA**: Content-focused, no native APIs needed, want one codebase
-- **Native (Expo)**: Need camera, push notifications, app store presence, offline-first
-- **Both**: Start with PWA, go native when you actually need native features
+---
 
 ## Optional Features
+
+Everything below is opt-in. Add env vars when you need them, ignore when you don't.
 
 ### AI — OpenAI + Anthropic
 
 ```bash
-# Add to .env.development.local
+# .env.development.local
 OPENAI_API_KEY=sk-your-key
-# and/or
 ANTHROPIC_API_KEY=sk-ant-your-key
 ```
 
-**Getting API keys:**
-
-- **OpenAI**: Go to [platform.openai.com](https://platform.openai.com/) → API Keys → Create new key
-- **Anthropic**: Go to [console.anthropic.com](https://console.anthropic.com/) → API Keys → Create key
-
-Then use the helpers in `src/lib/ai.ts`:
+Get keys: [OpenAI](https://platform.openai.com/) | [Anthropic](https://console.anthropic.com/)
 
 ```typescript
 import { generateWithAI, generateTypedObject } from '@/lib/ai';
 
-// Simple text generation
 const text = await generateWithAI('Write a haiku about shipping fast');
-
-// Type-safe structured output with Zod
-const result = await generateTypedObject(mySchema, 'Analyze this data...');
-
-// Use Anthropic instead of OpenAI
-const text = await generateWithAI('Hello', undefined, 'anthropic');
+const structured = await generateTypedObject(myZodSchema, 'Analyze this data...');
 ```
 
 ### Database — Any Postgres
 
 ```bash
-# Add to .env.development.local
+# .env.development.local
 DATABASE_URL=postgresql://user:pass@host/db
 ```
 
-Works with any Postgres provider:
+Providers: [Neon](https://neon.tech/) (recommended, free tier) | [Supabase](https://supabase.com/) | [Railway](https://railway.com/) | local Postgres
 
-- **Neon** (recommended): [neon.tech](https://neon.tech/) — free tier, serverless, great DX
-- **Supabase**: [supabase.com](https://supabase.com/) — free tier, comes with auth/storage too
-- **Railway**: [railway.com](https://railway.com/) — deploy Postgres alongside your app
-- **Local**: `postgresql://postgres:postgres@localhost:5432/mydb`
-
-Then define schemas in `src/db/schema/` and run `npm run db:push` to sync.
+```bash
+npm run db:push      # Sync schema to database
+npm run db:studio    # Visual database browser
+```
 
 ### Auth — Clerk
 
 ```bash
-# Add to .env.development.local
+# .env.development.local
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
 CLERK_SECRET_KEY=sk_test_...
 ```
 
-1. Sign up at [clerk.com](https://clerk.com/) (free tier available)
-2. Create an application and copy the keys
-3. That's it — auth middleware activates automatically
-
-Without Clerk keys, the app stays open and `/sign-in` shows a setup hint instead of crashing.
+Get keys: [clerk.com](https://clerk.com/) — create an app, copy the keys. Auth middleware activates automatically.
 
 ### Analytics — PostHog
 
 ```bash
-# Add to .env.development.local
+# .env.development.local
 NEXT_PUBLIC_POSTHOG_KEY=phc_your-key
 ```
 
-1. Sign up at [posthog.com](https://posthog.com/) (generous free tier)
-2. Create a project and copy the API key
-3. Analytics start tracking automatically
+Get key: [posthog.com](https://posthog.com/) — generous free tier. Tracking activates automatically.
 
-## Where Should I Deploy?
+---
 
-### Vercel (recommended for most projects)
+## Deploying
 
-Best for: Landing pages, marketing sites, SPAs, apps with serverless API routes.
+### Vercel — best for most projects
+
+Optimized for Next.js. Zero config. Automatic preview deployments on PRs.
 
 ```bash
 npm i -g vercel && vercel login && vercel --prod
 ```
 
-Vercel is optimized for Next.js. Zero config, automatic previews on PRs, great defaults.
+### Railway — best for backend-heavy apps
 
-### Railway (best for backend-heavy apps)
-
-Best for: Apps with background jobs, WebSocket servers, cron tasks, persistent processes.
+Real server. WebSockets, cron jobs, background workers, persistent processes.
 
 ```bash
 npm i -g @railway/cli && railway login && railway up
 ```
 
-Railway gives you a real server. Better for long-running processes and more control.
+**Quick rule**: Mostly frontend with API routes? Vercel. Need a persistent server? Railway. Not sure? Start with Vercel.
 
-### Both?
+---
 
-Totally valid. Use Vercel for your frontend and Railway for background workers or separate services.
+## Reference
 
-**Quick heuristic**: If your app is mostly frontend with API routes → Vercel. If you need a persistent server process → Railway.
+### Commands
 
-## Project Structure
+```bash
+npm run dev          # Start dev server (port 3000)
+npm run build        # Production build
+npm run lint         # ESLint + type checking
+npm run type-check   # TypeScript only
+npm run format       # Prettier format all files
+npm run setup        # Full environment setup
+npm run check        # Validate prerequisites
+npm run db:push      # Push schema to database
+npm run db:studio    # Visual database browser
+npm test             # Run Playwright tests
+```
+
+### Project structure
 
 ```
 src/
 ├── app/           # Pages and API routes (App Router)
-├── components/    # UI components
+├── components/
 │   ├── ui/        # Base components (shadcn/ui)
 │   └── features/  # Feature-specific components
-├── lib/           # Helpers (ai.ts, db.ts, ai-response.ts)
+├── lib/           # Helpers (ai, db, auth, rate-limit, etc.)
 ├── hooks/         # Custom React hooks
-└── db/            # Database schemas (if using DB)
+└── db/            # Database schemas
+docs/              # Guides and references
+scripts/           # Setup and utility scripts
+tests/             # Playwright E2E tests
 ```
 
-## Commands
+### Claude Code skills
 
-```bash
-npm run dev          # Start dev server
-npm run build        # Production build
-npm run lint         # Check for issues
-npm run type-check   # TypeScript validation
-npm run format       # Format all files with Prettier
-npm run format:check # Check formatting
-npm run setup        # Full environment setup
-npm run check        # Check prerequisites
-npm run db:push      # Push DB schema changes
-npm run db:studio    # Open DB admin UI
-npm test             # Install Chromium (if needed) + run Playwright smoke tests
-npm run test:e2e     # Run Playwright tests
-```
+| Skill           | What it does                                          |
+| --------------- | ----------------------------------------------------- |
+| `/setup`        | Full environment setup with spec-driven configuration |
+| `/add-feature`  | Scaffold a page + API route + component               |
+| `/add-db-table` | Create a Drizzle schema, push it, generate queries    |
+| `/backlog`      | Quick-capture ideas to GitHub Issues                  |
+| `/debug`        | Systematic debugging with logs and browser inspection |
+| `/deploy`       | Build, validate, and deploy to Vercel or Railway      |
 
-## MCP Integrations
+### Subagents
 
-This repo comes pre-configured with MCP servers for AI coding assistants:
+Tell Claude to use these for isolated review:
+
+- **code-reviewer** — bugs, security issues, pattern violations
+- **ui-reviewer** — visual quality, accessibility, responsive design
+
+Example: _"Use the code-reviewer to review my changes"_
+
+### MCP integrations
+
+Pre-configured in `.mcp.json`:
 
 - **Playwright** — browser testing and automation
-- **Railway** — deploy and manage Railway services
-- **Context7** — look up library documentation
+- **Railway** — deploy and manage services
+- **Context7** — look up library documentation inline
 
-See `.mcp.json` for configuration.
-
-## Claude Code Skills
-
-vibe-stack includes built-in skills you can invoke with slash commands:
-
-- `/add-feature` — Scaffold a new page + API route + component
-- `/add-db-table` — Create a Drizzle schema, push it, generate queries
-- `/deploy` — Build, validate, and deploy to Vercel or Railway
-- `/debug` — Systematic debugging with logs and browser inspection
-
-### Recommended Community Skills
-
-Install these to supercharge your vibe coding workflow:
+### Recommended community skills
 
 ```bash
-# Find and discover new skills
 claude skill install vercel-labs/skills/find-skills
-
-# React best practices from Vercel
 claude skill install vercel-labs/agent-skills/vercel-react-best-practices
-
-# Web design guidelines
 claude skill install vercel-labs/agent-skills/web-design-guidelines
-
-# Next.js patterns
 claude skill install vercel-labs/next-skills/next-best-practices
-
-# Frontend design methodology
 claude skill install anthropics/skills/frontend-design
-
-# Structured debugging
 claude skill install obra/superpowers/systematic-debugging
-
-# Test-driven development
-claude skill install obra/superpowers/test-driven-development
-
-# Web app testing patterns
-claude skill install anthropics/skills/webapp-testing
 ```
 
-Browse all available skills at [skills.sh](https://skills.sh/).
-
-## Subagents
-
-vibe-stack includes custom subagents for isolated code review:
-
-- **code-reviewer** — Reviews for bugs, security issues, and pattern violations
-- **ui-reviewer** — Checks visual quality, accessibility, and responsive design
-
-Use them by telling Claude: _"Use a subagent to review this code"_ or _"Use the ui-reviewer to check this page."_
+Browse more at [skills.sh](https://skills.sh/).
 
 ---
 
-Built with good defaults so you don't have to make decisions. Just start building.
+Built with good defaults so you can focus on the interesting parts. Now go build something.
