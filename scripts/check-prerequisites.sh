@@ -15,6 +15,36 @@ ok() { echo -e "${GREEN}  [ok] $1${NC}"; }
 skip() { echo -e "${YELLOW}  [skip] $1${NC}"; }
 info() { echo -e "${BLUE}  [info] $1${NC}"; }
 
+ENV_FILE=".env.development.local"
+
+get_env_value() {
+    local key="$1"
+    local line
+    line=$(grep -E "^[[:space:]]*${key}[[:space:]]*=" "$ENV_FILE" 2>/dev/null | tail -n 1 || true)
+    if [[ -z "$line" ]]; then
+        return 1
+    fi
+
+    local value="${line#*=}"
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+    value="${value#\"}"
+    value="${value%\"}"
+    value="${value#\'}"
+    value="${value%\'}"
+
+    if [[ -n "$value" ]]; then
+        printf '%s' "$value"
+        return 0
+    fi
+    return 1
+}
+
+has_env_value() {
+    local key="$1"
+    get_env_value "$key" >/dev/null
+}
+
 echo "Core:"
 if command -v node &> /dev/null; then
     NODE_VERSION=$(node --version)
@@ -64,23 +94,25 @@ fi
 
 echo ""
 echo "Environment:"
-if [[ -f ".env.development.local" ]]; then
-    ok ".env.development.local exists"
+if [[ -f "$ENV_FILE" ]]; then
+    ok "$ENV_FILE exists"
 
-    if grep -q "DATABASE_URL" ".env.development.local" 2>/dev/null; then
+    if has_env_value "DATABASE_URL"; then
         ok "DATABASE_URL configured"
     else
         info "DATABASE_URL not set — database features won't work"
     fi
 
-    if grep -q "OPENAI_API_KEY\|ANTHROPIC_API_KEY" ".env.development.local" 2>/dev/null; then
+    if has_env_value "OPENAI_API_KEY" || has_env_value "ANTHROPIC_API_KEY"; then
         ok "AI API key configured"
     else
         info "No AI API key — AI features won't work"
     fi
 
-    if grep -q "CLERK" ".env.development.local" 2>/dev/null; then
+    if has_env_value "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" && has_env_value "CLERK_SECRET_KEY"; then
         ok "Clerk auth configured"
+    elif has_env_value "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" || has_env_value "CLERK_SECRET_KEY"; then
+        info "Clerk auth partially configured — set both NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY"
     else
         info "Clerk not configured — auth disabled (that's fine!)"
     fi

@@ -7,11 +7,7 @@ export class ApiResponse {
     return NextResponse.json({ success: true, data }, { status });
   }
 
-  static error(
-    message: string, 
-    status = 500, 
-    details?: unknown
-  ) {
+  static error(message: string, status = 500, details?: unknown) {
     // Next.js 15 automatically logs errors with proper stack traces
     const error = {
       success: false,
@@ -46,24 +42,24 @@ export class ApiResponse {
 
   static methodNotAllowed(allowedMethods: string[]) {
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Method not allowed',
-        allowedMethods 
+        allowedMethods,
       },
-      { 
+      {
         status: 405,
-        headers: { 'Allow': allowedMethods.join(', ') }
-      }
+        headers: { Allow: allowedMethods.join(', ') },
+      },
     );
   }
 }
 
 // Modern async error wrapper - cleaner than try/catch everywhere
-export function withErrorHandling<T extends any[], R>(
-  handler: (...args: T) => Promise<NextResponse | Response>
+export function withErrorHandling<TArgs extends unknown[]>(
+  handler: (...args: TArgs) => Promise<NextResponse | Response>,
 ) {
-  return async (...args: T): Promise<NextResponse> => {
+  return async (...args: TArgs): Promise<NextResponse> => {
     try {
       const result = await handler(...args);
       return result as NextResponse;
@@ -71,23 +67,21 @@ export function withErrorHandling<T extends any[], R>(
       if (error instanceof z.ZodError) {
         return ApiResponse.validationError(error);
       }
-      
+
       if (error instanceof Error) {
         // Check for specific error types
         if (error.message.includes('not yet implemented')) {
           return ApiResponse.error('Feature not implemented', 501, error.message);
         }
-        
+
         if (error.message.includes('ECONNREFUSED')) {
           return ApiResponse.error('Database connection failed', 503);
         }
 
         return ApiResponse.error(
-          process.env.NODE_ENV === 'development' 
-            ? error.message 
-            : 'Internal server error',
+          process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
           500,
-          process.env.NODE_ENV === 'development' ? error.stack : undefined
+          process.env.NODE_ENV === 'development' ? error.stack : undefined,
         );
       }
 

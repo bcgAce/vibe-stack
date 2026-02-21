@@ -1,6 +1,7 @@
 import { PostHogProvider } from '@/components/posthog-provider';
 import { MyThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { getBaseUrl } from '@/lib/site-url';
 import { Inter } from 'next/font/google';
 import type React from 'react';
 import ClientLayout from './client-layout';
@@ -17,7 +18,7 @@ export const metadata = {
     template: '%s | vibe-stack',
   },
   description: 'Build cool stuff fast',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  metadataBase: new URL(getBaseUrl()),
   openGraph: {
     title: 'vibe-stack',
     description: 'Build cool stuff fast',

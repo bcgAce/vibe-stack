@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  eslint: {
+    // Run lint in a dedicated step/script to avoid duplicate output during build.
+    ignoreDuringBuilds: true,
+  },
   async headers() {
     return [
       {

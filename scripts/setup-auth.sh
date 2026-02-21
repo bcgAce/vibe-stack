@@ -44,7 +44,7 @@ echo ""
 print_section "GitHub CLI Authentication"
 
 if ! command -v gh &> /dev/null; then
-    print_error "GitHub CLI not installed. Run 'npm run task-setup-all' first"
+    print_error "GitHub CLI not installed. Run 'npm run setup' first"
     exit 1
 fi
 
@@ -65,7 +65,7 @@ else
         echo "AI_REQUEST: Please run the following command in your terminal to authenticate with GitHub:"
         echo "gh auth login"
         echo ""
-        print_info "After authentication, re-run: /auth or npm run task-auth"
+        print_info "After authentication, re-run: /auth or npm run setup:auth"
         exit 0
     else
         if gh auth login; then
@@ -82,7 +82,7 @@ fi
 print_section "Vercel CLI Authentication"
 
 if ! command -v vercel &> /dev/null; then
-    print_error "Vercel CLI not installed. Run 'npm run task-setup-all' first"
+    print_error "Vercel CLI not installed. Run 'npm run setup' first"
     exit 1
 fi
 
@@ -99,7 +99,7 @@ else
         echo "AI_REQUEST: Please run the following command in your terminal to authenticate with Vercel:"
         echo "vercel login"
         echo ""
-        print_info "After authentication, re-run: /auth or npm run task-auth"
+        print_info "After authentication, re-run: /auth or npm run setup:auth"
         exit 0
     else
         if vercel login; then
@@ -195,7 +195,7 @@ echo ""
 
 # Run final check
 print_info "Running final verification..."
-npm run task-check-prerequisites
+npm run check
 
 if [[ $? -eq 0 ]]; then
     echo ""
